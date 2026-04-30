@@ -6,15 +6,12 @@ const Page = async () => {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
-
-  // If already has a restaurant, skip
   const { data: existing } = await supabase
     .from('restaurants')
     .select('id')
     .eq('owner_id', user.id)
     .maybeSingle();
   if (existing) redirect('/dashboard');
-
   return <OnboardingForm userEmail={user.email} userId={user.id} />;
 };
 
