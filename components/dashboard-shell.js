@@ -15,6 +15,16 @@ const navItems = [
 
 const DashboardShell = ({ restaurant, userEmail, children }) => {
   const pathname = usePathname();
+  const statusLabel = restaurant?.is_approved
+    ? restaurant?.is_open
+      ? 'Live'
+      : 'Closed'
+    : 'Pending approval';
+  const statusClasses = restaurant?.is_approved
+    ? restaurant?.is_open
+      ? 'bg-emerald-500/10 text-emerald-700'
+      : 'bg-muted text-muted-foreground'
+    : 'bg-amber-500/10 text-amber-700';
   return (
     <div className="min-h-screen bg-muted/30 flex">
       <aside className="hidden md:flex w-64 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground">
@@ -28,7 +38,12 @@ const DashboardShell = ({ restaurant, userEmail, children }) => {
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-medium truncate">{restaurant?.name || 'Your restaurant'}</div>
-              <div className="text-xs text-muted-foreground truncate">{restaurant?.city || 'Pontypridd'}</div>
+              <div className="mt-1 flex items-center gap-2">
+                <div className="text-xs text-muted-foreground truncate">{restaurant?.city || 'Pontypridd'}</div>
+                <span className={cn('inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]', statusClasses)}>
+                  {statusLabel}
+                </span>
+              </div>
             </div>
             <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
           </div>

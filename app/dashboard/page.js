@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { TestOrderButton } from './test-order-button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Clock3, EyeOff } from 'lucide-react';
 
 const Page = async () => {
   const supabase = await createClient();
@@ -18,13 +18,51 @@ const Page = async () => {
   const net = (orders || []).reduce((s, o) => s + Number(o.net_amount || 0), 0);
   const pending = (orders || []).filter(o => ['placed','accepted','preparing','ready','out_for_delivery'].includes(o.status)).length;
   const completed = (orders || []).filter(o => o.status === 'completed').length;
+  const awaitingApproval = !restaurant.is_approved;
 
   return (
     <div className="p-6 md:p-12 max-w-6xl mx-auto">
+      {awaitingApproval && (
+        <div className="mb-8 rounded-3xl border border-primary/20 bg-primary/5 p-6 md:p-8">
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-background px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                <Clock3 className="h-3.5 w-3.5" />
+                Pending approval
+              </div>
+              <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-balance">Your restaurant has been submitted for review.</h2>
+              <p className="mt-3 text-sm text-muted-foreground md:text-base">
+                You can keep setting up your menu and delivery details now, but customers cannot see or order from your restaurant until Ponty Eats approves it.
+              </p>
+            </div>
+            <div className="grid gap-3 rounded-2xl border bg-background p-4 text-sm text-muted-foreground md:min-w-80">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>Your account and restaurant profile are live inside your dashboard.</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <EyeOff className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>Browse food stays hidden until an admin approves your listing.</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>Add menu items and final settings now so you are ready to go live immediately after approval.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 pb-10 border-b">
         <div>
           <h1 className="font-display text-4xl md:text-6xl font-semibold leading-[1] text-balance">{restaurant.name}.</h1>
-          <p className="text-muted-foreground mt-3 max-w-md">{orders.length === 0 ? "Let's get your first order through. Click below to send a test order." : "Here's what's happening at your kitchen today."}</p>
+          <p className="text-muted-foreground mt-3 max-w-md">
+            {awaitingApproval
+              ? "Your listing is waiting for approval. Finish your setup now so you're ready to accept customers the moment you go live."
+              : orders.length === 0
+                ? "Let's get your first order through. Click below to send a test order."
+                : "Here's what's happening at your kitchen today."}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <TestOrderButton restaurantId={restaurant.id} />
@@ -71,8 +109,20 @@ const Page = async () => {
       <div className="py-12 border-t">
         <div className="grid md:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden">
           <QuickLink href="/dashboard/orders" title="Live orders" desc="Incoming orders update instantly. Status workflow at a glance." />
-          <QuickLink href="/dashboard/menu" title="Menu" desc="Categories, items, photos, modifiers. Toggle availability instantly." />
-          <QuickLink href="/dashboard/settings" title="Settings" desc="Hours, delivery radius, prep time, minimum order. All yours to tune." />
+          <QuickLink
+            href="/dashboard/menu"
+            title="Menu"
+            desc={awaitingApproval
+              ? 'Build out categories, items and modifiers now so your menu is ready for approval.'
+              : 'Categories, items, photos, modifiers. Toggle availability instantly.'}
+          />
+          <QuickLink
+            href="/dashboard/settings"
+            title="Settings"
+            desc={awaitingApproval
+              ? 'Review opening hours, delivery radius and prep time before your listing is made public.'
+              : 'Hours, delivery radius, prep time, minimum order. All yours to tune.'}
+          />
         </div>
       </div>
     </div>
