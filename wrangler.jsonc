@@ -13,6 +13,18 @@
     "NEXT_PUBLIC_BASE_URL": "https://pontyeats.co.uk",
     "NEXT_PUBLIC_SUPABASE_URL": "https://kqefspfdctnxzonirner.supabase.co"
   },
+  "routes": [
+    {
+      "pattern": "pontyeats.co.uk",
+      "zone_name": "pontyeats.co.uk",
+      "custom_domain": true
+    },
+    {
+      "pattern": "pontyeats.com",
+      "zone_name": "pontyeats.com",
+      "custom_domain": true
+    }
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
