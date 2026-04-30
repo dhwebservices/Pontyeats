@@ -208,7 +208,8 @@ async function handleGetOrder(orderId) {
 
 // ============ DISPATCHER ============
 async function handler(request, { params }) {
-  const path = (params?.path || []).join('/');
+  const resolvedParams = await params;
+  const path = (resolvedParams?.path || []).join('/');
   const method = request.method;
 
   try {

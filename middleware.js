@@ -2,6 +2,17 @@ import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
 export async function middleware(request) {
+  const url = request.nextUrl.clone();
+  const pathname = url.pathname;
+
+  // Avoid booting Supabase auth for routes that do not participate in auth redirects.
+  const isProtected = pathname.startsWith('/dashboard') || pathname.startsWith('/onboarding');
+  const isAuthPage = pathname === '/login' || pathname === '/signup';
+
+  if (!isProtected && !isAuthPage) {
+    return NextResponse.next({ request: { headers: request.headers } });
+  }
+
   let response = NextResponse.next({ request: { headers: request.headers } });
 
   const supabase = createServerClient(
@@ -21,14 +32,9 @@ export async function middleware(request) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
-  const url = request.nextUrl.clone();
-  const pathname = url.pathname;
-
-  // Routes that require auth
-  const isProtected = pathname.startsWith('/dashboard') || pathname.startsWith('/onboarding');
-  // Auth-only pages (already authed users shouldn't see)
-  const isAuthPage = pathname === '/login' || pathname === '/signup';
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (isProtected && !user) {
     url.pathname = '/login';

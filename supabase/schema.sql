@@ -350,7 +350,7 @@ create policy "restaurant assets owner write" on storage.objects
         select 1
         from public.restaurants r
         where r.owner_id = auth.uid()
-          and (storage.foldername(name))[2] = r.id::text
+          and (storage.foldername(name))[1] = r.id::text
       )
     )
   );
@@ -365,7 +365,7 @@ create policy "restaurant assets owner update" on storage.objects
         select 1
         from public.restaurants r
         where r.owner_id = auth.uid()
-          and (storage.foldername(name))[2] = r.id::text
+          and (storage.foldername(name))[1] = r.id::text
       )
     )
   )
@@ -377,7 +377,7 @@ create policy "restaurant assets owner update" on storage.objects
         select 1
         from public.restaurants r
         where r.owner_id = auth.uid()
-          and (storage.foldername(name))[2] = r.id::text
+          and (storage.foldername(name))[1] = r.id::text
       )
     )
   );
@@ -392,7 +392,7 @@ create policy "restaurant assets owner delete" on storage.objects
         select 1
         from public.restaurants r
         where r.owner_id = auth.uid()
-          and (storage.foldername(name))[2] = r.id::text
+          and (storage.foldername(name))[1] = r.id::text
       )
     )
   );

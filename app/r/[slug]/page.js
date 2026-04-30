@@ -5,8 +5,9 @@ import MenuClient from './menu-client';
 export const dynamic = 'force-dynamic';
 
 const Page = async ({ params }) => {
+  const { slug } = await params;
   const admin = createAdminClient();
-  const { data: restaurant } = await admin.from('restaurants').select('*').eq('slug', params.slug).maybeSingle();
+  const { data: restaurant } = await admin.from('restaurants').select('*').eq('slug', slug).maybeSingle();
   if (!restaurant) notFound();
 
   const c = await admin.from('menu_categories').select('*').eq('restaurant_id', restaurant.id).order('sort_order');
