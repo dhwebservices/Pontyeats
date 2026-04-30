@@ -228,23 +228,29 @@ alter table public.orders enable row level security;
 alter table public.platform_settings enable row level security;
 
 -- profiles
-create policy if not exists "profiles self read" on public.profiles
+drop policy if exists "profiles self read" on public.profiles;
+create policy "profiles self read" on public.profiles
   for select using (auth.uid() = id or public.is_admin());
-create policy if not exists "profiles self update" on public.profiles
+drop policy if exists "profiles self update" on public.profiles;
+create policy "profiles self update" on public.profiles
   for update using (auth.uid() = id or public.is_admin())
   with check (auth.uid() = id or public.is_admin());
 
 -- restaurants
-create policy if not exists "restaurants public approved read" on public.restaurants
+drop policy if exists "restaurants public approved read" on public.restaurants;
+create policy "restaurants public approved read" on public.restaurants
   for select using (is_approved = true or owner_id = auth.uid() or public.is_admin());
-create policy if not exists "restaurants owner insert" on public.restaurants
+drop policy if exists "restaurants owner insert" on public.restaurants;
+create policy "restaurants owner insert" on public.restaurants
   for insert with check (owner_id = auth.uid() or public.is_admin());
-create policy if not exists "restaurants owner update" on public.restaurants
+drop policy if exists "restaurants owner update" on public.restaurants;
+create policy "restaurants owner update" on public.restaurants
   for update using (owner_id = auth.uid() or public.is_admin())
   with check (owner_id = auth.uid() or public.is_admin());
 
 -- menu categories
-create policy if not exists "menu categories public read" on public.menu_categories
+drop policy if exists "menu categories public read" on public.menu_categories;
+create policy "menu categories public read" on public.menu_categories
   for select using (
     exists (
       select 1 from public.restaurants r
@@ -252,7 +258,8 @@ create policy if not exists "menu categories public read" on public.menu_categor
         and (r.is_approved = true or r.owner_id = auth.uid() or public.is_admin())
     )
   );
-create policy if not exists "menu categories owner write" on public.menu_categories
+drop policy if exists "menu categories owner write" on public.menu_categories;
+create policy "menu categories owner write" on public.menu_categories
   for all using (
     exists (
       select 1 from public.restaurants r
@@ -267,7 +274,8 @@ create policy if not exists "menu categories owner write" on public.menu_categor
   );
 
 -- menu items
-create policy if not exists "menu items public read" on public.menu_items
+drop policy if exists "menu items public read" on public.menu_items;
+create policy "menu items public read" on public.menu_items
   for select using (
     exists (
       select 1 from public.restaurants r
@@ -275,7 +283,8 @@ create policy if not exists "menu items public read" on public.menu_items
         and (r.is_approved = true or r.owner_id = auth.uid() or public.is_admin())
     )
   );
-create policy if not exists "menu items owner write" on public.menu_items
+drop policy if exists "menu items owner write" on public.menu_items;
+create policy "menu items owner write" on public.menu_items
   for all using (
     exists (
       select 1 from public.restaurants r
@@ -290,14 +299,16 @@ create policy if not exists "menu items owner write" on public.menu_items
   );
 
 -- orders
-create policy if not exists "orders restaurant read" on public.orders
+drop policy if exists "orders restaurant read" on public.orders;
+create policy "orders restaurant read" on public.orders
   for select using (
     exists (
       select 1 from public.restaurants r
       where r.id = restaurant_id and (r.owner_id = auth.uid() or public.is_admin())
     )
   );
-create policy if not exists "orders restaurant update" on public.orders
+drop policy if exists "orders restaurant update" on public.orders;
+create policy "orders restaurant update" on public.orders
   for update using (
     exists (
       select 1 from public.restaurants r
@@ -312,9 +323,11 @@ create policy if not exists "orders restaurant update" on public.orders
   );
 
 -- platform settings
-create policy if not exists "platform settings read" on public.platform_settings
+drop policy if exists "platform settings read" on public.platform_settings;
+create policy "platform settings read" on public.platform_settings
   for select using (true);
-create policy if not exists "platform settings admin update" on public.platform_settings
+drop policy if exists "platform settings admin update" on public.platform_settings;
+create policy "platform settings admin update" on public.platform_settings
   for update using (public.is_admin())
   with check (public.is_admin());
 
@@ -322,10 +335,12 @@ insert into storage.buckets (id, name, public)
 values ('restaurant-assets', 'restaurant-assets', true)
 on conflict (id) do nothing;
 
-create policy if not exists "restaurant assets public read" on storage.objects
+drop policy if exists "restaurant assets public read" on storage.objects;
+create policy "restaurant assets public read" on storage.objects
   for select using (bucket_id = 'restaurant-assets');
 
-create policy if not exists "restaurant assets owner write" on storage.objects
+drop policy if exists "restaurant assets owner write" on storage.objects;
+create policy "restaurant assets owner write" on storage.objects
   for insert to authenticated with check (
     bucket_id = 'restaurant-assets'
     and (
@@ -339,7 +354,8 @@ create policy if not exists "restaurant assets owner write" on storage.objects
     )
   );
 
-create policy if not exists "restaurant assets owner update" on storage.objects
+drop policy if exists "restaurant assets owner update" on storage.objects;
+create policy "restaurant assets owner update" on storage.objects
   for update to authenticated using (
     bucket_id = 'restaurant-assets'
     and (
@@ -365,7 +381,8 @@ create policy if not exists "restaurant assets owner update" on storage.objects
     )
   );
 
-create policy if not exists "restaurant assets owner delete" on storage.objects
+drop policy if exists "restaurant assets owner delete" on storage.objects;
+create policy "restaurant assets owner delete" on storage.objects
   for delete to authenticated using (
     bucket_id = 'restaurant-assets'
     and (
