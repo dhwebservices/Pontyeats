@@ -2,11 +2,17 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "pontyeats",
   "main": ".open-next/worker.js",
+  "workers_dev": false,
+  "preview_urls": false,
   "compatibility_date": "2026-04-30",
   "compatibility_flags": [
     "nodejs_compat",
     "global_fetch_strictly_public"
   ],
+  "vars": {
+    "NEXT_PUBLIC_BASE_URL": "https://pontyeats.co.uk",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://kqefspfdctnxzonirner.supabase.co"
+  },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
