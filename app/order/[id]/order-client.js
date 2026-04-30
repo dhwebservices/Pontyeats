@@ -70,10 +70,7 @@ const OrderClient = ({ orderId, sessionId }) => {
     <div className="min-h-screen bg-background">
       <header className="border-b">
         <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-display text-xl font-bold">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-sans text-sm">P</span>
-            Ponty Eats
-          </Link>
+          <Link href="/" className="font-display text-xl font-bold">Ponty Eats</Link>
           <Link href="/restaurants" className="text-sm text-muted-foreground hover:text-foreground">Order again</Link>
         </div>
       </header>

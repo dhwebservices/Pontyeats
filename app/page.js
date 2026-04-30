@@ -26,10 +26,7 @@ const Page = () => (
   <div className="min-h-screen bg-background">
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-display font-bold text-2xl tracking-tight">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-sans font-bold text-base">P</span>
-          Ponty Eats
-        </Link>
+        <Link href="/" className="font-display font-bold text-2xl tracking-tight">Ponty Eats</Link>
         <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
           <Link href="/restaurants" className="text-muted-foreground hover:text-foreground">Browse food</Link>
           <a href="#partner" className="text-muted-foreground hover:text-foreground">For restaurants</a>
@@ -169,7 +166,6 @@ const Page = () => (
           <div className="relative rounded-2xl bg-background text-foreground overflow-hidden shadow-2xl">
             <div className="border-b px-5 py-3 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">P</div>
                 <span className="font-medium text-sm">Live orders</span>
               </div>
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-green-600"><span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" /> Live</span>
@@ -230,10 +226,7 @@ const Page = () => (
       <div className="container py-12 md:py-16">
         <div className="grid md:grid-cols-4 gap-10">
           <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-2 font-display text-2xl font-bold">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-sans text-sm">P</span>
-              Ponty Eats
-            </Link>
+            <Link href="/" className="font-display text-2xl font-bold">Ponty Eats</Link>
             <p className="mt-4 text-sm text-muted-foreground max-w-sm">Built in Pontypridd, for Pontypridd. The local food platform that pays its kitchens fairly.</p>
           </div>
           <div>

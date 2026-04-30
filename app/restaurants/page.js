@@ -14,10 +14,7 @@ const Page = async () => {
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-display font-bold text-2xl tracking-tight">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-sans text-base">P</span>
-            Ponty Eats
-          </Link>
+          <Link href="/" className="font-display font-bold text-2xl tracking-tight">Ponty Eats</Link>
           <nav className="hidden md:flex items-center gap-7 text-sm">
             <Link href="/restaurants" className="font-semibold">Browse food</Link>
             <Link href="/signup" className="text-muted-foreground hover:text-foreground">For restaurants</Link>

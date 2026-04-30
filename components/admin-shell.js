@@ -19,10 +19,7 @@ const AdminShell = ({ userEmail, children }) => {
     <div className="min-h-screen bg-background flex">
       <aside className="hidden md:flex w-60 shrink-0 flex-col border-r bg-sidebar">
         <div className="px-5 py-5 border-b">
-          <Link href="/" className="flex items-center gap-2 font-display font-bold">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-sans text-sm">P</span>
-            Ponty Eats
-          </Link>
+          <Link href="/" className="font-display font-bold">Ponty Eats</Link>
           <div className="mt-1 text-xs uppercase tracking-widest text-primary font-mono">Admin</div>
         </div>
         <nav className="flex-1 p-3 space-y-1">
@@ -45,7 +42,7 @@ const AdminShell = ({ userEmail, children }) => {
       </aside>
       <main className="flex-1 min-w-0">
         <div className="md:hidden border-b px-4 py-3 flex items-center justify-between">
-          <Link href="/admin" className="font-display font-bold flex items-center gap-2"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-sans">P</span> Admin</Link>
+          <Link href="/admin" className="font-display font-bold">Ponty Eats Admin</Link>
           <form action="/auth/signout" method="post"><Button type="submit" size="sm" variant="ghost"><LogOut className="h-4 w-4" /></Button></form>
         </div>
         <div className="md:hidden border-b overflow-x-auto">

@@ -40,10 +40,7 @@ function LoginForm() {
         <div className="absolute inset-0 bg-gradient-to-tr from-primary/85 via-primary/60 to-orange-700/40 mix-blend-multiply" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="relative z-10 h-full flex flex-col justify-between p-12 text-white">
-          <Link href="/" className="inline-flex items-center gap-2 font-display text-2xl font-bold">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-primary font-sans text-base">P</span>
-            Ponty Eats
-          </Link>
+          <Link href="/" className="inline-flex font-display text-2xl font-bold">Ponty Eats</Link>
           <div>
             <h2 className="font-display text-5xl font-semibold leading-[1.05] text-balance">
               Your kitchen

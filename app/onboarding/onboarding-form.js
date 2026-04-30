@@ -47,10 +47,7 @@ const OnboardingForm = ({ userId }) => {
     <div className="min-h-screen bg-background">
       <header className="border-b">
         <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-display text-xl font-bold">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-sans text-sm">P</span>
-            Ponty Eats
-          </Link>
+          <Link href="/" className="font-display text-xl font-bold">Ponty Eats</Link>
           <div className="text-xs text-muted-foreground">Step 1 of 1</div>
         </div>
       </header>
