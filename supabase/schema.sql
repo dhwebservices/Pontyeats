@@ -121,14 +121,14 @@ create table if not exists public.orders (
 create table if not exists public.platform_settings (
   id integer primary key,
   restaurant_signups_enabled boolean not null default true,
-  customer_signups_enabled boolean not null default true,
+  customer_signups_enabled boolean not null default false,
   default_commission_pct numeric(5,2) not null default 6,
   created_at timestamptz not null default timezone('utc', now()),
   updated_at timestamptz not null default timezone('utc', now())
 );
 
 insert into public.platform_settings (id, restaurant_signups_enabled, customer_signups_enabled, default_commission_pct)
-values (1, true, true, 6)
+values (1, true, false, 6)
 on conflict (id) do update
 set updated_at = timezone('utc', now());
 
