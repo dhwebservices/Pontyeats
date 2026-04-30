@@ -61,7 +61,7 @@ const Page = () => (
       <div className="container relative px-6 pt-12 pb-20 md:pt-20 md:pb-32">
         <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-            <MapPin className="h-3 w-3" /> CF37 · Pontypridd
+            <MapPin className="h-3 w-3" /> Pontypridd
           </div>
           <h1 className="mt-7 font-display text-[clamp(3rem,9vw,7rem)] font-semibold leading-[0.95] text-balance">
             Local food.<br />
@@ -88,7 +88,7 @@ const Page = () => (
       <div className="flex gap-12 marquee whitespace-nowrap font-display text-3xl md:text-5xl font-semibold">
         {Array.from({ length: 2 }).map((_, k) => (
           <div key={k} className="flex gap-12 shrink-0">
-            {['Burgers', '🍔', 'Pizza', '🍕', 'Curry', '🍛', 'Welsh', '🏴󠁧󠁢󠁷󠁬󠁳󠁿', 'Wraps', '🌯', 'Sweet', '🍰', 'Late night', '🌙', 'Brunch', '🥞', 'Italian', '🍝'].map((t, i) => (
+            {['Burgers', '🍔', 'Pizza', '🍕', 'Curry', '🍛', 'Welsh', '🏴', 'Wraps', '🌯', 'Sweet', '🍰', 'Late night', '🌙', 'Brunch', '🥞', 'Italian', '🍝'].map((t, i) => (
               <span key={i} className="opacity-90">{t}</span>
             ))}
           </div>
@@ -252,8 +252,8 @@ const Page = () => (
           </div>
         </div>
         <div className="mt-12 pt-6 border-t flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-muted-foreground">
-          <span>© {new Date().getFullYear()} Ponty Eats · Made in Pontypridd 🏴󠁧󠁢󠁷󠁬󠁳󠁿</span>
-          <span>Powered by your local kitchens</span>
+          <span>© {new Date().getFullYear()} Ponty Eats · Made in Pontypridd 🏴</span>
+          <span>Built and run by DH Website Services</span>
         </div>
       </div>
     </footer>
