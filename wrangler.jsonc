@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "ponty-eats",
+  "name": "pontyeats",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-04-30",
   "compatibility_flags": [
@@ -14,7 +14,7 @@
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "ponty-eats"
+      "service": "pontyeats"
     }
   ]
 }
