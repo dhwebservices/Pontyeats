@@ -20,18 +20,52 @@ const SignupPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password.length < 6) { toast.error('Password must be at least 6 characters'); return; }
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+
     setLoading(true);
+
+    const { data: settings, error: settingsError } = await supabase
+      .from('platform_settings')
+      .select('restaurant_signups_enabled')
+      .eq('id', 1)
+      .maybeSingle();
+
+    if (settingsError) {
+      setLoading(false);
+      toast.error('Unable to check signup availability right now. Please try again.');
+      return;
+    }
+
+    if (settings && settings.restaurant_signups_enabled === false) {
+      setLoading(false);
+      toast.error('Restaurant applications are temporarily closed. Please try again later.');
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({
-      email, password,
+      email,
+      password,
       options: {
         data: { full_name: name, role: 'restaurant' },
         emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
       },
     });
-    if (error) { setLoading(false); toast.error(error.message); return; }
-    const { data: { session } } = await supabase.auth.getSession();
+
+    if (error) {
+      setLoading(false);
+      toast.error(error.message);
+      return;
+    }
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     setLoading(false);
+
     if (session) {
       toast.success('Welcome to Ponty Eats!');
       router.push('/onboarding');
