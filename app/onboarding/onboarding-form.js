@@ -29,8 +29,8 @@ const OnboardingForm = ({ userId }) => {
     setLoading(true);
     const slug = `${slugify(form.name)}-${Math.random().toString(36).slice(2,6)}`;
     const { error } = await supabase.from('restaurants').insert({
-      owner_id: userId,
-      name: form.name, slug, cuisine_type: form.cuisine_type, description: form.description,
+      owner_id: userId, name: form.name, slug,
+      cuisine_type: form.cuisine_type, description: form.description,
       phone: form.phone, address_line: form.address_line, postal_code: form.postal_code,
       prep_time_minutes: Number(form.prep_time_minutes) || 25,
       min_order_value: Number(form.min_order_value) || 0,
@@ -51,17 +51,16 @@ const OnboardingForm = ({ userId }) => {
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-sans text-sm">P</span>
             Ponty Eats
           </Link>
-          <div className="font-mono text-xs text-muted-foreground uppercase tracking-widest">Onboarding · Step 1 of 1</div>
+          <div className="text-xs text-muted-foreground">Step 1 of 1</div>
         </div>
       </header>
 
       <div className="container max-w-2xl py-12 md:py-20">
-        <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Almost there</span>
-        <h1 className="font-display text-4xl md:text-6xl font-semibold mt-3 leading-[1] text-balance">Tell us about your <span className="italic text-primary">restaurant</span>.</h1>
+        <h1 className="font-display text-4xl md:text-6xl font-semibold leading-[1] text-balance">Tell us about your <span className="italic text-primary">restaurant</span>.</h1>
         <p className="text-muted-foreground mt-4 text-lg">You can edit any of this later in settings.</p>
 
         <form onSubmit={submit} className="mt-12 space-y-8">
-          <Section number="01" title="The basics">
+          <Section title="The basics">
             <Field label="Restaurant name *">
               <Input required value={form.name} onChange={handle('name')} placeholder="e.g. Taff Street Tandoori" className="h-11" />
             </Field>
@@ -78,7 +77,7 @@ const OnboardingForm = ({ userId }) => {
             </Field>
           </Section>
 
-          <Section number="02" title="Where you are">
+          <Section title="Where you are">
             <Field label="Street address">
               <Input value={form.address_line} onChange={handle('address_line')} placeholder="e.g. 12 Taff Street" className="h-11" />
             </Field>
@@ -87,7 +86,7 @@ const OnboardingForm = ({ userId }) => {
             </Field>
           </Section>
 
-          <Section number="03" title="Operations">
+          <Section title="Operations">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <Field label="Prep time (min)">
                 <Input type="number" value={form.prep_time_minutes} onChange={handle('prep_time_minutes')} className="h-11" />
@@ -110,19 +109,15 @@ const OnboardingForm = ({ userId }) => {
   );
 };
 
-const Section = ({ number, title, children }) => (
+const Section = ({ title, children }) => (
   <div className="border-t pt-8">
-    <div className="flex items-baseline gap-3 mb-6">
-      <span className="font-mono text-xs text-muted-foreground">{number}</span>
-      <h2 className="font-display text-2xl font-semibold">{title}</h2>
-    </div>
+    <h2 className="font-display text-2xl font-semibold mb-6">{title}</h2>
     <div className="space-y-5">{children}</div>
   </div>
 );
-
 const Field = ({ label, children }) => (
   <div className="space-y-1.5">
-    <Label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{label}</Label>
+    <Label className="text-sm font-medium">{label}</Label>
     {children}
   </div>
 );

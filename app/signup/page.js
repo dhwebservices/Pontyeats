@@ -45,7 +45,7 @@ const SignupPage = () => {
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       <div className="relative hidden md:block">
-        <img src="/pontypridd-bridge.png" alt="Pontypridd Old Bridge" className="absolute inset-0 h-full w-full object-cover" />
+        <img src="/pontypridd-bridge.png" alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-tr from-primary/85 via-primary/60 to-orange-700/40 mix-blend-multiply" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="relative z-10 h-full flex flex-col justify-between p-12 text-white">
@@ -54,8 +54,7 @@ const SignupPage = () => {
             Ponty Eats
           </Link>
           <div>
-            <span className="text-xs font-semibold uppercase tracking-widest opacity-90">For restaurants</span>
-            <h2 className="mt-3 font-display text-5xl font-semibold leading-[1.05] text-balance">
+            <h2 className="font-display text-5xl font-semibold leading-[1.05] text-balance">
               Be one of the <span className="italic">first</span> on Ponty Eats.
             </h2>
             <ul className="mt-8 space-y-3 max-w-sm">
@@ -71,12 +70,6 @@ const SignupPage = () => {
       <div className="flex items-center justify-center p-6 md:p-8 bg-background">
         <div className="w-full max-w-sm space-y-7">
           <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="h-3.5 w-3.5" /> Back to home</Link>
-          <div className="md:hidden">
-            <Link href="/" className="flex items-center gap-2 font-display text-xl font-bold">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-sans text-sm">P</span>
-              Ponty Eats
-            </Link>
-          </div>
           <div>
             <h1 className="font-display text-4xl font-semibold">List your restaurant</h1>
             <p className="text-sm text-muted-foreground mt-2">Free to start. No card required. 5-minute setup.</p>
