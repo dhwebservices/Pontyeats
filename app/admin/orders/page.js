@@ -19,7 +19,7 @@ const Page = async () => {
             <div className="col-span-3 truncate">{o.restaurants?.name || '—'}</div>
             <div className="col-span-2 truncate">{o.customer_name}</div>
             <div className="col-span-2 capitalize text-muted-foreground">{(o.status||'').replace('_',' ')}</div>
-            <div className="col-span-2 capitalize text-muted-foreground text-xs">{o.payment_status} · {o.delivery_type}</div>
+            <div className="col-span-2 capitalize text-muted-foreground text-xs">{o.payment_status} · {o.fulfillment_type}</div>
             <div className="col-span-2 text-right font-display font-semibold">£{Number(o.total||0).toFixed(2)}</div>
           </div>
         ))}

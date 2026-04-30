@@ -82,7 +82,7 @@ const OnboardingForm = ({ userId }) => {
               <Input value={form.address_line} onChange={handle('address_line')} placeholder="e.g. 12 Taff Street" className="h-11" />
             </Field>
             <Field label="Postcode">
-              <Input value={form.postal_code} onChange={handle('postal_code')} placeholder="CF37 ..." className="h-11" />
+              <Input value={form.postal_code} onChange={handle('postal_code')} placeholder="Pontypridd postcode" className="h-11" />
             </Field>
           </Section>
 

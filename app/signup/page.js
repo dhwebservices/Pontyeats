@@ -16,7 +16,6 @@ const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const supabase = createClient();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +26,7 @@ const SignupPage = () => {
 
     setLoading(true);
 
+    const supabase = createClient();
     const { data: settings, error: settingsError } = await supabase
       .from('platform_settings')
       .select('restaurant_signups_enabled')

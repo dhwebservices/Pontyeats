@@ -48,12 +48,12 @@ async function handleTestOrder(body) {
     order_number: orderNumber, restaurant_id: restaurantId,
     customer_name: pick(FAKE_NAMES), customer_email: 'test@pontyeats.local',
     customer_phone: '07' + Math.floor(100000000 + Math.random() * 900000000),
-    delivery_type: Math.random() > 0.3 ? 'delivery' : 'collection',
-    delivery_address: 'Pontypridd, CF37 ' + String(Math.floor(Math.random() * 9)) + 'AB',
+    fulfillment_type: Math.random() > 0.3 ? 'delivery' : 'collection',
+    delivery_address: 'Pontypridd test address ' + String(Math.floor(Math.random() * 9)),
     items, subtotal: +subtotal.toFixed(2), delivery_fee: deliveryFee, total,
     commission_pct: commissionPct, commission_amount: commissionAmount,
-    stripe_fee_estimate: stripeFee, net_to_restaurant: net,
-    status: 'pending', payment_status: 'paid',
+    net_amount: net,
+    status: 'placed', payment_status: 'paid',
   }).select().single();
   if (error) return err(error.message, 500);
   return ok({ order: data });
@@ -87,7 +87,8 @@ async function handleCheckoutSession(request, body) {
   if (orderItems.length === 0) return err('No available items');
   if (subtotal < Number(restaurant.min_order_value || 0)) return err(`Minimum order is £${Number(restaurant.min_order_value).toFixed(2)}`);
 
-  const deliveryFee = delivery_type === 'delivery' ? 2.5 : 0;
+  const fulfillmentType = delivery_type === 'collection' ? 'collection' : 'delivery';
+  const deliveryFee = fulfillmentType === 'delivery' ? 2.5 : 0;
   const total = +(subtotal + deliveryFee).toFixed(2);
   const commissionPct = Number(restaurant.commission_pct || 6);
   const commissionAmount = +(total * (commissionPct / 100)).toFixed(2);
@@ -95,16 +96,17 @@ async function handleCheckoutSession(request, body) {
   const net = +(total - commissionAmount - stripeFee).toFixed(2);
   const orderNumber = String(1000 + Math.floor(Math.random() * 9000));
 
-  // Create order in 'pending' state with payment_status='pending'
+  // Create order before redirecting to Stripe; payment is confirmed on return/webhook.
   const { data: order, error: insertErr } = await admin.from('orders').insert({
     order_number: orderNumber, restaurant_id,
     customer_name: customer.name, customer_email: customer.email, customer_phone: customer.phone || null,
-    delivery_type: delivery_type || 'delivery',
-    delivery_address: delivery_address || null, delivery_notes: delivery_notes || null,
+    fulfillment_type: fulfillmentType,
+    delivery_address: fulfillmentType === 'delivery' ? (delivery_address || null) : null,
+    delivery_notes: delivery_notes || null,
     items: orderItems, subtotal: +subtotal.toFixed(2), delivery_fee: deliveryFee, total,
     commission_pct: commissionPct, commission_amount: commissionAmount,
-    stripe_fee_estimate: stripeFee, net_to_restaurant: net,
-    status: 'pending', payment_status: 'pending',
+    net_amount: net,
+    status: 'placed', payment_status: 'pending',
   }).select().single();
   if (insertErr) return err(insertErr.message, 500);
 
@@ -135,7 +137,7 @@ async function handleCheckoutSession(request, body) {
     metadata: { order_id: order.id, restaurant_id },
   });
 
-  await admin.from('orders').update({ stripe_session_id: session.id }).eq('id', order.id);
+  await admin.from('orders').update({ stripe_checkout_session_id: session.id }).eq('id', order.id);
   return ok({ url: session.url, session_id: session.id, order_id: order.id });
 }
 
@@ -145,7 +147,7 @@ async function handleCheckoutStatus(sessionId) {
   const session = await stripe.checkout.sessions.retrieve(sessionId);
   const admin = createAdminClient();
 
-  const { data: order } = await admin.from('orders').select('*').eq('stripe_session_id', sessionId).maybeSingle();
+  const { data: order } = await admin.from('orders').select('*').eq('stripe_checkout_session_id', sessionId).maybeSingle();
   if (!order) return ok({ payment_status: session.payment_status, status: session.status });
 
   // If paid and order still pending, mark as paid + send emails (idempotent)

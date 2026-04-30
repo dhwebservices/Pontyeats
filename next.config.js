@@ -1,17 +1,11 @@
+const path = require('path');
+
 const nextConfig = {
-  output: 'standalone',
   images: {
     unoptimized: true,
   },
-  webpack(config, { dev }) {
-    if (dev) {
-      config.watchOptions = {
-        poll: 2000,
-        aggregateTimeout: 300,
-        ignored: ['**/node_modules'],
-      };
-    }
-    return config;
+  turbopack: {
+    root: path.resolve(__dirname),
   },
   onDemandEntries: {
     maxInactiveAge: 10000,

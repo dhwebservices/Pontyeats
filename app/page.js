@@ -74,7 +74,7 @@ const Page = () => (
             <form action="/restaurants" className="flex items-center gap-2 rounded-full border bg-card p-1.5 shadow-lg shadow-primary/5">
               <div className="flex items-center gap-2 px-4 flex-1">
                 <Search className="h-4 w-4 text-muted-foreground shrink-0" />
-                <input name="q" type="text" placeholder="Enter your postcode (CF37...)" className="w-full bg-transparent py-3 text-sm placeholder:text-muted-foreground focus:outline-none" />
+                <input name="q" type="text" placeholder="Enter your postcode" className="w-full bg-transparent py-3 text-sm placeholder:text-muted-foreground focus:outline-none" />
               </div>
               <Button type="submit" className="rounded-full h-11 px-6">Find food</Button>
             </form>

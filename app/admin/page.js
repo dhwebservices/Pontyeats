@@ -16,7 +16,7 @@ const Page = async () => {
 
   const totalRevenue = (orders||[]).reduce((s,o)=>s+Number(o.total||0),0);
   const totalCommission = (orders||[]).reduce((s,o)=>s+Number(o.commission_amount||0),0);
-  const totalNet = (orders||[]).reduce((s,o)=>s+Number(o.net_to_restaurant||0),0);
+  const totalNet = (orders||[]).reduce((s,o)=>s+Number(o.net_amount||0),0);
   const paidOrders = (orders||[]).filter(o => o.payment_status === 'paid');
 
   return (

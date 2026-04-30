@@ -15,8 +15,8 @@ const Page = async () => {
   const orders = ordRes.data || [];
 
   const totalRevenue = (orders || []).reduce((s, o) => s + Number(o.total || 0), 0);
-  const net = (orders || []).reduce((s, o) => s + Number(o.net_to_restaurant || 0), 0);
-  const pending = (orders || []).filter(o => ['pending','accepted','preparing','on_the_way'].includes(o.status)).length;
+  const net = (orders || []).reduce((s, o) => s + Number(o.net_amount || 0), 0);
+  const pending = (orders || []).filter(o => ['placed','accepted','preparing','ready','out_for_delivery'].includes(o.status)).length;
   const completed = (orders || []).filter(o => o.status === 'completed').length;
 
   return (
@@ -60,7 +60,7 @@ const Page = async () => {
                   <div className="text-xs text-muted-foreground">{new Date(o.created_at).toLocaleString()}</div>
                 </div>
                 <div className="col-span-3 text-sm text-muted-foreground capitalize">{(o.status||'').replace('_',' ')}</div>
-                <div className="col-span-2 text-sm text-muted-foreground capitalize">{o.delivery_type}</div>
+                <div className="col-span-2 text-sm text-muted-foreground capitalize">{o.fulfillment_type}</div>
                 <div className="col-span-2 text-right font-semibold font-display">£{Number(o.total||0).toFixed(2)}</div>
               </div>
             ))}

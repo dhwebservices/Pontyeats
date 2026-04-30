@@ -7,10 +7,11 @@ import { Check, Clock, Bike, ChefHat, AlertCircle, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client';
 
 const STATUS_STEPS = [
-  { key: 'pending', label: 'Order received', icon: Clock },
+  { key: 'placed', label: 'Order received', icon: Clock },
   { key: 'accepted', label: 'Accepted', icon: Check },
   { key: 'preparing', label: 'Preparing', icon: ChefHat },
-  { key: 'on_the_way', label: 'On the way', icon: Bike },
+  { key: 'ready', label: 'Ready', icon: Check },
+  { key: 'out_for_delivery', label: 'Out for delivery', icon: Bike },
   { key: 'completed', label: 'Delivered', icon: Check },
 ];
 

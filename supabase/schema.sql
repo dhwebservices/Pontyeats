@@ -13,6 +13,15 @@ begin
 end;
 $$;
 
+create table if not exists public.profiles (
+  id uuid primary key references auth.users (id) on delete cascade,
+  email text unique,
+  full_name text,
+  role text not null default 'customer' check (role in ('admin', 'restaurant', 'customer')),
+  created_at timestamptz not null default timezone('utc', now()),
+  updated_at timestamptz not null default timezone('utc', now())
+);
+
 create or replace function public.is_admin()
 returns boolean
 language sql
@@ -31,15 +40,6 @@ as $$
     false
   );
 $$;
-
-create table if not exists public.profiles (
-  id uuid primary key references auth.users (id) on delete cascade,
-  email text unique,
-  full_name text,
-  role text not null default 'customer' check (role in ('admin', 'restaurant', 'customer')),
-  created_at timestamptz not null default timezone('utc', now()),
-  updated_at timestamptz not null default timezone('utc', now())
-);
 
 create table if not exists public.restaurants (
   id uuid primary key default gen_random_uuid(),
@@ -104,6 +104,7 @@ create table if not exists public.orders (
   fulfillment_type text not null default 'delivery' check (fulfillment_type in ('delivery', 'collection')),
   delivery_address text,
   delivery_notes text,
+  delay_minutes integer not null default 0,
   subtotal numeric(10,2) not null default 0,
   delivery_fee numeric(10,2) not null default 0,
   service_fee numeric(10,2) not null default 0,

@@ -9,10 +9,11 @@ import { Clock, CheckCircle2, Bike, Flame, X, ChefHat, AlertCircle } from 'lucid
 import { toast } from 'sonner';
 
 const STATUSES = [
-  { key: 'pending', label: 'New', icon: AlertCircle, tone: 'bg-orange-100 text-orange-700 border-orange-200' },
+  { key: 'placed', label: 'New', icon: AlertCircle, tone: 'bg-orange-100 text-orange-700 border-orange-200' },
   { key: 'accepted', label: 'Accepted', icon: CheckCircle2, tone: 'bg-blue-100 text-blue-700 border-blue-200' },
   { key: 'preparing', label: 'Preparing', icon: ChefHat, tone: 'bg-amber-100 text-amber-700 border-amber-200' },
-  { key: 'on_the_way', label: 'On the way', icon: Bike, tone: 'bg-purple-100 text-purple-700 border-purple-200' },
+  { key: 'ready', label: 'Ready', icon: CheckCircle2, tone: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+  { key: 'out_for_delivery', label: 'Out for delivery', icon: Bike, tone: 'bg-purple-100 text-purple-700 border-purple-200' },
   { key: 'completed', label: 'Completed', icon: Flame, tone: 'bg-green-100 text-green-700 border-green-200' },
   { key: 'cancelled', label: 'Cancelled', icon: X, tone: 'bg-red-100 text-red-700 border-red-200' },
 ];
@@ -49,7 +50,7 @@ const OrdersClient = ({ restaurant, initialOrders }) => {
   }, [restaurant.id]);
 
   const filtered = useMemo(() => {
-    if (filter === 'active') return orders.filter(o => ['pending','accepted','preparing','on_the_way'].includes(o.status));
+    if (filter === 'active') return orders.filter(o => ['placed','accepted','preparing','ready','out_for_delivery'].includes(o.status));
     if (filter === 'all') return orders;
     return orders.filter(o => o.status === filter);
   }, [orders, filter]);
@@ -83,7 +84,7 @@ const OrdersClient = ({ restaurant, initialOrders }) => {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <FilterPill active={filter==='active'} onClick={() => setFilter('active')}>Active ({orders.filter(o=>['pending','accepted','preparing','on_the_way'].includes(o.status)).length})</FilterPill>
+        <FilterPill active={filter==='active'} onClick={() => setFilter('active')}>Active ({orders.filter(o=>['placed','accepted','preparing','ready','out_for_delivery'].includes(o.status)).length})</FilterPill>
         <FilterPill active={filter==='all'} onClick={() => setFilter('all')}>All ({orders.length})</FilterPill>
         {STATUSES.map(s => (
           <FilterPill key={s.key} active={filter===s.key} onClick={() => setFilter(s.key)}>{s.label}</FilterPill>
@@ -119,16 +120,18 @@ const OrderCard = ({ order, onUpdate, onDelay, fresh }) => {
   const Icon = status.icon;
   const items = Array.isArray(order.items) ? order.items : [];
   const next = {
-    pending: 'accepted',
+    placed: 'accepted',
     accepted: 'preparing',
-    preparing: order.delivery_type === 'delivery' ? 'on_the_way' : 'completed',
-    on_the_way: 'completed',
+    preparing: order.fulfillment_type === 'delivery' ? 'out_for_delivery' : 'ready',
+    ready: 'completed',
+    out_for_delivery: 'completed',
   }[order.status];
   const nextLabel = {
-    pending: 'Accept',
+    placed: 'Accept',
     accepted: 'Start preparing',
-    preparing: order.delivery_type === 'delivery' ? 'Mark on the way' : 'Mark ready',
-    on_the_way: 'Mark completed',
+    preparing: order.fulfillment_type === 'delivery' ? 'Mark out for delivery' : 'Mark ready',
+    ready: 'Mark collected',
+    out_for_delivery: 'Mark completed',
   }[order.status];
 
   return (
@@ -144,7 +147,7 @@ const OrderCard = ({ order, onUpdate, onDelay, fresh }) => {
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold">£{Number(order.total || 0).toFixed(2)}</div>
-          <div className="text-xs text-muted-foreground capitalize">{order.delivery_type || 'delivery'}</div>
+          <div className="text-xs text-muted-foreground capitalize">{order.fulfillment_type || 'delivery'}</div>
         </div>
       </div>
 
@@ -168,10 +171,10 @@ const OrderCard = ({ order, onUpdate, onDelay, fresh }) => {
 
       <div className="mt-4 flex flex-wrap gap-2">
         {next && <Button size="sm" onClick={() => onUpdate(order.id, next)}>{nextLabel}</Button>}
-        {['pending','accepted','preparing'].includes(order.status) && (
+        {['placed','accepted','preparing','ready','out_for_delivery'].includes(order.status) && (
           <Button size="sm" variant="outline" onClick={() => onDelay(order.id, order.delay_minutes)}>+10 min delay</Button>
         )}
-        {['pending','accepted','preparing'].includes(order.status) && (
+        {['placed','accepted','preparing','ready','out_for_delivery'].includes(order.status) && (
           <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => onUpdate(order.id, 'cancelled')}>Reject</Button>
         )}
       </div>

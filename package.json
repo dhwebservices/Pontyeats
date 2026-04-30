@@ -8,7 +8,11 @@
     "dev:no-reload": "next dev --hostname 0.0.0.0 --port 3000",
     "dev:webpack": "next dev --hostname 0.0.0.0 --port 3000",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -50,7 +54,7 @@
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.516.0",
-    "next": "14.2.3",
+    "next": "^16.2.4",
     "next-themes": "^0.4.6",
     "react": "^18",
     "react-day-picker": "^9.7.0",
@@ -63,15 +67,19 @@
     "stripe": "^22.1.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
-    "uuid": "^9.0.1",
     "vaul": "^1.1.2",
     "zod": "^3.25.67"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.19.5",
     "autoprefixer": "^10.4.19",
     "globals": "^16.2.0",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "wrangler": "^4.87.0"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "overrides": {
+    "svix": "^1.92.2"
+  },
+  "packageManager": "npm@11.9.0"
 }
