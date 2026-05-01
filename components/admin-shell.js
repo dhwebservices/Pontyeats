@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, ClipboardList, Store, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, Store, Settings, LogOut, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const NAV = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
+  { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/orders', label: 'Orders', icon: ClipboardList },
   { href: '/admin/restaurants', label: 'Restaurants', icon: Store },
   { href: '/admin/settings', label: 'Platform', icon: Settings },

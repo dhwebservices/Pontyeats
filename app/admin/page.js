@@ -32,6 +32,10 @@ const Page = async () => {
       </div>
 
       <div className="py-12 grid md:grid-cols-2 gap-6">
+        <Link href="/admin/users" className="group rounded-2xl border bg-card p-6 hover:border-primary/40 transition">
+          <h3 className="font-display text-2xl font-semibold">Users →</h3>
+          <p className="text-sm text-muted-foreground mt-2">Create admin staff, add restaurant users, and control dashboard access.</p>
+        </Link>
         <Link href="/admin/orders" className="group rounded-2xl border bg-card p-6 hover:border-primary/40 transition">
           <h3 className="font-display text-2xl font-semibold">All orders →</h3>
           <p className="text-sm text-muted-foreground mt-2">View, filter, and refund every order on the platform.</p>

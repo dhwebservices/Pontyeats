@@ -1,28 +1,20 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import DashboardShell from '@/components/dashboard-shell';
+import { requireRestaurantContext } from '@/lib/restaurant-access';
 
 const Layout = async ({ children }) => {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login');
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  const { data: restaurant } = await supabase
-    .from('restaurants')
-    .select('*')
-    .eq('owner_id', user.id)
-    .maybeSingle();
-
-  if (!restaurant) redirect('/onboarding');
+  const { user, profile, restaurant, permissions, isAdmin } = await requireRestaurantContext(supabase);
 
   return (
-    <DashboardShell restaurant={restaurant} userEmail={user.email} isAdmin={profile?.role === 'admin'}>
+    <DashboardShell
+      restaurant={restaurant}
+      userEmail={user.email}
+      isAdmin={isAdmin}
+      permissions={permissions}
+      restaurantRole={profile?.role}
+    >
       {children}
     </DashboardShell>
   );

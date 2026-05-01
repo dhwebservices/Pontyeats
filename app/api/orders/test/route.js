@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { getRestaurantContext, hasRestaurantPermission } from '@/lib/restaurant-access';
 
 export async function POST(request) {
   const supabase = await createClient();
@@ -29,8 +30,12 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Restaurant not found' }, { status: 404 });
   }
 
-  const userRole = user.user_metadata?.role || user.app_metadata?.role;
-  if (restaurant.owner_id !== user.id && userRole !== 'admin') {
+  const context = await getRestaurantContext(supabase, user.id);
+  const canManageOrders =
+    context?.restaurant?.id === restaurant.id &&
+    hasRestaurantPermission(context, 'orders');
+
+  if (!canManageOrders) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 

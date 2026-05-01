@@ -7,13 +7,13 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
-  { href: '/dashboard/orders', label: 'Live orders', icon: ClipboardList },
-  { href: '/dashboard/menu', label: 'Menu', icon: BookOpen },
-  { href: '/dashboard/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard', label: 'Overview', icon: LayoutDashboard, permission: null },
+  { href: '/dashboard/orders', label: 'Live orders', icon: ClipboardList, permission: 'can_manage_orders' },
+  { href: '/dashboard/menu', label: 'Menu', icon: BookOpen, permission: 'can_manage_menu' },
+  { href: '/dashboard/settings', label: 'Settings', icon: Settings, permission: 'can_manage_settings' },
 ];
 
-const DashboardShell = ({ restaurant, userEmail, children, isAdmin = false }) => {
+const DashboardShell = ({ restaurant, userEmail, children, isAdmin = false, permissions = {} }) => {
   const pathname = usePathname();
   const statusLabel = restaurant?.is_approved
     ? restaurant?.is_open
@@ -25,6 +25,7 @@ const DashboardShell = ({ restaurant, userEmail, children, isAdmin = false }) =>
       ? 'bg-emerald-500/10 text-emerald-700'
       : 'bg-muted text-muted-foreground'
     : 'bg-amber-500/10 text-amber-700';
+  const visibleNavItems = navItems.filter((item) => !item.permission || permissions[item.permission]);
   return (
     <div className="min-h-screen bg-muted/30 flex">
       <aside className="hidden md:flex w-64 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground">
@@ -60,7 +61,7 @@ const DashboardShell = ({ restaurant, userEmail, children, isAdmin = false }) =>
           </div>
         </div>
         <nav className="flex-1 p-3 space-y-1">
-          {navItems.map(({ href, label, icon: Icon }) => {
+          {visibleNavItems.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
             return (
               <Link key={href} href={href} className={cn(
@@ -92,7 +93,7 @@ const DashboardShell = ({ restaurant, userEmail, children, isAdmin = false }) =>
         </div>
         <div className="md:hidden border-b bg-background overflow-x-auto">
           <div className="flex gap-1 px-2 py-2">
-            {navItems.map(({ href, label, icon: Icon }) => {
+            {visibleNavItems.map(({ href, label, icon: Icon }) => {
               const active = pathname === href;
               return (
                 <Link key={href} href={href} className={cn('flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm whitespace-nowrap', active ? 'bg-primary text-primary-foreground' : 'text-muted-foreground')}>

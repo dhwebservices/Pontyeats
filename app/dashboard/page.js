@@ -3,11 +3,13 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { TestOrderButton } from './test-order-button';
 import { ArrowRight, CheckCircle2, Clock3, EyeOff } from 'lucide-react';
+import { requireRestaurantContext, hasRestaurantPermission } from '@/lib/restaurant-access';
 
 const Page = async () => {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const { data: restaurant } = await supabase.from('restaurants').select('*').eq('owner_id', user.id).single();
+  const context = await requireRestaurantContext(supabase);
+  const { restaurant, permissions } = context;
+  const canManageOrders = hasRestaurantPermission(context, 'orders');
 
   const ordRes = await supabase
     .from('orders').select('*').eq('restaurant_id', restaurant.id)
@@ -65,8 +67,8 @@ const Page = async () => {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <TestOrderButton restaurantId={restaurant.id} />
-          <Link href="/dashboard/orders"><Button variant="outline" className="rounded-full">Live orders</Button></Link>
+          {canManageOrders && <TestOrderButton restaurantId={restaurant.id} />}
+          {canManageOrders && <Link href="/dashboard/orders"><Button variant="outline" className="rounded-full">Live orders</Button></Link>}
         </div>
       </div>
 
@@ -85,8 +87,12 @@ const Page = async () => {
         {orders.length === 0 ? (
           <div className="border-y py-20 text-center">
             <p className="font-display text-3xl text-muted-foreground italic">No orders yet.</p>
-            <p className="text-sm text-muted-foreground mt-2">Click "Send test order" to see real-time orders in action.</p>
-            <div className="mt-6 inline-block"><TestOrderButton restaurantId={restaurant.id} /></div>
+            <p className="text-sm text-muted-foreground mt-2">
+              {canManageOrders
+                ? 'Click "Send test order" to see real-time orders in action.'
+                : 'Orders will appear here once your team starts receiving them.'}
+            </p>
+            {canManageOrders && <div className="mt-6 inline-block"><TestOrderButton restaurantId={restaurant.id} /></div>}
           </div>
         ) : (
           <div className="divide-y border-y">
@@ -108,21 +114,27 @@ const Page = async () => {
 
       <div className="py-12 border-t">
         <div className="grid md:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden">
-          <QuickLink href="/dashboard/orders" title="Live orders" desc="Incoming orders update instantly. Status workflow at a glance." />
-          <QuickLink
-            href="/dashboard/menu"
-            title="Menu"
-            desc={awaitingApproval
-              ? 'Build out categories, items and modifiers now so your menu is ready for approval.'
-              : 'Categories, items, photos, modifiers. Toggle availability instantly.'}
-          />
-          <QuickLink
-            href="/dashboard/settings"
-            title="Settings"
-            desc={awaitingApproval
-              ? 'Review opening hours, delivery radius and prep time before your listing is made public.'
-              : 'Hours, delivery radius, prep time, minimum order. All yours to tune.'}
-          />
+          {permissions.can_manage_orders && (
+            <QuickLink href="/dashboard/orders" title="Live orders" desc="Incoming orders update instantly. Status workflow at a glance." />
+          )}
+          {permissions.can_manage_menu && (
+            <QuickLink
+              href="/dashboard/menu"
+              title="Menu"
+              desc={awaitingApproval
+                ? 'Build out categories, items and modifiers now so your menu is ready for approval.'
+                : 'Categories, items, photos, modifiers. Toggle availability instantly.'}
+            />
+          )}
+          {permissions.can_manage_settings && (
+            <QuickLink
+              href="/dashboard/settings"
+              title="Settings"
+              desc={awaitingApproval
+                ? 'Review opening hours, delivery radius and prep time before your listing is made public.'
+                : 'Hours, delivery radius, prep time, minimum order. All yours to tune.'}
+            />
+          )}
         </div>
       </div>
     </div>

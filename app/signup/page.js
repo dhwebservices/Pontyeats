@@ -49,7 +49,7 @@ const SignupPage = () => {
       email,
       password,
       options: {
-        data: { full_name: name, role: 'restaurant' },
+        data: { full_name: name, role: 'restaurant_owner' },
         emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
       },
     });
