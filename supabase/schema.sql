@@ -184,7 +184,7 @@ begin
     new.id,
     new.email,
     coalesce(new.raw_user_meta_data ->> 'full_name', split_part(new.email, '@', 1)),
-    coalesce(new.raw_user_meta_data ->> 'role', 'customer')
+    coalesce(new.raw_app_meta_data ->> 'role', new.raw_user_meta_data ->> 'role', 'customer')
   )
   on conflict (id) do update
     set email = excluded.email,
@@ -287,7 +287,7 @@ begin
   update public.profiles
   set email = new.email,
       full_name = coalesce(new.raw_user_meta_data ->> 'full_name', public.profiles.full_name),
-      role = coalesce(new.raw_user_meta_data ->> 'role', public.profiles.role),
+      role = coalesce(new.raw_app_meta_data ->> 'role', public.profiles.role),
       updated_at = timezone('utc', now())
   where id = new.id;
   return new;
