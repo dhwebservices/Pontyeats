@@ -7,6 +7,12 @@ const Layout = async ({ children }) => {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle();
+
   const { data: restaurant } = await supabase
     .from('restaurants')
     .select('*')
@@ -16,7 +22,7 @@ const Layout = async ({ children }) => {
   if (!restaurant) redirect('/onboarding');
 
   return (
-    <DashboardShell restaurant={restaurant} userEmail={user.email}>
+    <DashboardShell restaurant={restaurant} userEmail={user.email} isAdmin={profile?.role === 'admin'}>
       {children}
     </DashboardShell>
   );
